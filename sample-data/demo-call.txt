@@ -1,0 +1,5 @@
+Customer: Hi, my internet has not been working since yesterday and I am frustrated.
+Agent: I am sorry about that. I can see an outage in your area and will create a priority ticket.
+Customer: Thank you. I need it fixed today because I work from home.
+Agent: The engineer is scheduled for this afternoon. I will send you an update by 4 PM.
+Customer: Great, I appreciate the quick help.

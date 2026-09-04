@@ -1,0 +1,28 @@
+.fallback {
+  display: inline-block;
+  margin-top: 10px;
+  color: #ffc873;
+}
+.chart ul {
+  padding-left: 18px;
+  color: #a8bad3;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.kpis h3 {
+  font-size: 21px;
+}
+.transcript-input {
+  width: 100%;
+  min-height: 115px;
+  resize: vertical;
+  border: 1px solid #314866;
+  border-radius: 10px;
+  padding: 12px;
+  background: #091421;
+  color: #eef5ff;
+  font: 14px/1.5 'DM Sans', sans-serif;
+}
+.transcript-input::placeholder {
+  color: #6f87a5;
+}

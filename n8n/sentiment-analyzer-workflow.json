@@ -1,0 +1,33 @@
+{
+  "name": "Sentiment Analyzer - LLM Workflow",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "sentiment-analyze", "responseMode": "lastNode" },
+      "id": "webhook", "name": "Receive transcript", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST", "url": "https://api.openai.com/v1/chat/completions", "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Authorization", "value": "=Bearer {{$env.OPENAI_API_KEY}}" }] },
+        "sendBody": true, "contentType": "json",
+        "jsonBody": "={{ { model: 'gpt-4o-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: 'Analyze a phone-call transcript. Return JSON only with: overallSentiment (Positive, Negative, or Neutral), sentimentScore (number -100 to 100), sentimentBreakdown ({positive, neutral, negative}), sentenceAnalysis (array of {speaker, sentence, sentiment, emotion}), primaryEmotion, primaryIssue, resolutionStatus, conversationSummary, keyInsights (string array). Be concise and do not invent information.' }, { role: 'user', content: $json.body.text }] } }}"
+      },
+      "id": "openai", "name": "Analyze with OpenAI", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [500, 300]
+    },
+    {
+      "parameters": { "jsCode": "const content = $input.first().json.choices?.[0]?.message?.content;\nif (!content) throw new Error('OpenAI returned no content');\nreturn [{ json: JSON.parse(content) }];" },
+      "id": "parse", "name": "Parse structured result", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [760, 300]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}" },
+      "id": "respond", "name": "Return analysis", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "Receive transcript": { "main": [[{ "node": "Analyze with OpenAI", "type": "main", "index": 0 }]] },
+    "Analyze with OpenAI": { "main": [[{ "node": "Parse structured result", "type": "main", "index": 0 }]] },
+    "Parse structured result": { "main": [[{ "node": "Return analysis", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {}
+}
