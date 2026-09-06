@@ -45,7 +45,11 @@ function App() {
   async function run(text) {
     setLoading(true); setError('');
     try {
-      const response = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+      const response = await fetch('https://sentiment-analyzer-assignment.onrender.com/api/analyze', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ text })
+});
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Analysis failed.');
       setResult(data);
