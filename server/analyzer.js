@@ -77,14 +77,19 @@ function score(text) {
   const negative = count(lexicons.negative);
   const compound = positive - negative;
 
-  // Neutral zone prevents weak keyword matches
-  // from incorrectly forcing Positive or Negative
   let label = "Neutral";
 
-  if (compound >= 2) {
-    label = "Positive";
-  } else if (compound <= -2) {
+  // Strong emotional words should be detected even once
+  const strongNegative =
+    /\b(angry|frustrated|hate|terrible|unhappy|disappointed)\b/.test(value);
+
+  const strongPositive =
+    /\b(excellent|great|awesome|amazing|love|perfect)\b/.test(value);
+
+  if (strongNegative || compound < 0) {
     label = "Negative";
+  } else if (strongPositive || compound > 0) {
+    label = "Positive";
   }
 
   return {
