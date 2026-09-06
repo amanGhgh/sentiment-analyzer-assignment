@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { analyze } = require("./analyzer");
 const app = express();
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://127.0.0.1:5173" }));
+app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 function isValidAnalysis(data) {
   return (
