@@ -211,7 +211,33 @@ function analyze(text) {
     };
   });
 
-  const all = score(text);
+  // Calculate overall sentiment from sentence-level results
+  const sentimentCounts = {
+    Positive: sentences.filter((item) => item.sentiment === "Positive").length,
+    Neutral: sentences.filter((item) => item.sentiment === "Neutral").length,
+    Negative: sentences.filter((item) => item.sentiment === "Negative").length,
+  };
+
+  let overallLabel = "Neutral";
+
+  if (
+    sentimentCounts.Positive > sentimentCounts.Negative &&
+    sentimentCounts.Positive >= sentimentCounts.Neutral
+  ) {
+    overallLabel = "Positive";
+  } else if (
+    sentimentCounts.Negative > sentimentCounts.Positive &&
+    sentimentCounts.Negative >= sentimentCounts.Neutral
+  ) {
+    overallLabel = "Negative";
+  }
+
+  const all = {
+    positive: sentimentCounts.Positive,
+    negative: sentimentCounts.Negative,
+    compound: sentimentCounts.Positive - sentimentCounts.Negative,
+    label: overallLabel,
+  };
 
   const sentimentBreakdown = {
     positive: 0,
